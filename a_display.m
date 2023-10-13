@@ -51,10 +51,34 @@ for r = middle_point_row - point_count_half : middle_point_row+point_count_half-
         for i = 1:frame
             noise(i) = data(r,c,i);
         end    
+
+        if (((r-(middle_point_row-point_count_half)+1) == 6) && ((c-(middle_point_column-point_count_half)+1) == 7))
+            figure
+            plot(noise)
+            xlabel('帧序');
+            ylabel('该点的实际深度值（mm）');
+            legend('坐标(6,7)的时域波动');
+        end
+
+        if (((r-(middle_point_row-point_count_half)+1) == 5) && ((c-(middle_point_column-point_count_half)+1) == 5))
+            figure
+            plot(noise)
+            xlabel('帧序');
+            ylabel('该点的实际深度值（mm）');
+            legend('坐标(5,5)的时域波动');
+        end
+        
         result(r-(middle_point_row-point_count_half)+1,c-(middle_point_column-point_count_half)+1) = std(noise);
     end
 end
 Time_domain_noise = mean2(result)
+
+figure
+mesh(result)
+xlabel('行方向');
+ylabel('列方向');
+zlabel('标准差（mm）');
+legend('10*10区域每一个像素点的时域波动');
 
 % 计算空域波动
 for i = 1:frame
@@ -69,6 +93,21 @@ for i = 1:frame
 end
 space_domain_noise = mean(space_noise)
 
+% 图表的绘制
+% figure 
+% plot(space_noise);
+% xlabel('帧序');
+% ylabel('标准差（mm）');
+% legend('空域波动随时间的变化');
+
+% figure
+% mesh(data(:,:,24));
+% legend('第24帧深度图');
+% figure 
+% mesh(data(:,:,31));
+% legend('第31帧深度图');
+
+colorbar
 %关闭文件操作
 pusDepth_1 = permute(data, [2 1 3]);
 fclose(inFileID);
